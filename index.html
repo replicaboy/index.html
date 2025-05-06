@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Just for You ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      font-family: 'Comic Sans MS', cursive;
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    h1, p {
+      margin-top: 20px;
+    }
+
+    #startSection, #mainSection, #replySection {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 20px;
+      border: none;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background-color: white;
+      color: #ff4d6d;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    button:hover {
+      background-color: #ff4d6d;
+      color: white;
+    }
+
+    #slideshow {
+      margin: 20px auto;
+      width: 300px;
+      height: 300px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+
+    #slideshow img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 15px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    #message {
+      font-size: 1.5em;
+      margin: 20px;
+      min-height: 60px;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: floatUp 6s infinite ease-in;
+      opacity: 0.7;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      top: 0;
+      left: -10px;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(1) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1.5) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hi There 💖</h1>
+
+  <!-- 🌸 Start Section -->
+  <div id="startSection" style="display: flex;">
+    <p>What's your name?</p>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button onclick="startSurprise()">Let's Go!</button>
+  </div>
+
+  <!-- 💝 Main Surprise Section -->
+  <div id="mainSection">
+    <div id="slideshow">
+      <img id="slideImage" src="" alt="Cute Slide">
+    </div>
+    <div id="message"></div>
+    <button onclick="showReply()">💌 Send a Reply</button>
+  </div>
+
+  <!-- 💌 Reply Section -->
+  <div id="replySection">
+    <p>Type your reply below 💬</p>
+    <input type="text" id="replyInput" placeholder="Your message...">
+    <button onclick="sendReply()">Send 💘</button>
+    <p id="thanksReply" style="display:none;">Awww, thank you! 🥺💕</p>
+  </div>
+
+  <audio id="bgMusic" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" loop></audio>
+
+  <script>
+    const startSection = document.getElementById('startSection');
+    const mainSection = document.getElementById('mainSection');
+    const replySection = document.getElementById('replySection');
+    const messageBox = document.getElementById('message');
+    const nameInput = document.getElementById('nameInput');
+    const bgMusic = document.getElementById('bgMusic');
+
+    // 🌹 Rose & Heart slideshow (Updated Images)
+    const images = [
+      'https://freeimghost.net/i/%E2%80%94Pngtree%E2%80%94luxurious-red-rose-bouquet-tied-20326684.xur0g8',  // Rose Heart PNG
+      'https://freeimghost.net/i/dbb72221-06a4-48c5-a972-659586f0ce4e.xur36k',  // Rose Heart Clipart
+      'https://freeimghost.net/i/2575f24b-db70-4099-af6e-fdca1e6935f0.xur727',  // Rose Heart Wallpaper
+      'https://freeimghost.net/i/27382d8c-3362-4891-950c-bb381d26b2aa.xurYIg'  // Rose Heart PNG Image
+    ];
+    let currentSlide = 0;
+    const slideImage = document.getElementById('slideImage');
+
+    function changeSlide() {
+      slideImage.src = images[currentSlide];
+      currentSlide = (currentSlide + 1) % images.length;
+    }
+
+    setInterval(() => {
+      if (mainSection.style.display === "flex") {
+        changeSlide();
+      }
+    }, 3000);
+
+    function typeMessage(name) {
+      const text = `Hey ${name}, you're beautiful and you make the world a little brighter ❤️`;
+      let index = 0;
+      function type() {
+        if (index < text.length) {
+          messageBox.innerHTML += text.charAt(index);
+          index++;
+          setTimeout(type, 70);
+        }
+      }
+      type();
+    }
+
+    function startSurprise() {
+      const name = nameInput.value.trim() || "Beautiful";
+      startSection.style.display = "none";
+      mainSection.style.display = "flex";
+      changeSlide();
+      typeMessage(name);
+      bgMusic.play();
+      setInterval(createHeart, 400);
+    }
+
+    function showReply() {
+      replySection.style.display = "flex";
+    }
+
+    function sendReply() {
+      const input = document.getElementById('replyInput').value.trim();
+      if (input) {
+        document.getElementById('thanksReply').style.display = 'block';
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.animationDuration = 4 + Math.random() * 3 + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+
+    // Show start input on load
+    startSection.style.display = "flex";
+  </script>
+</body>
+</html>
